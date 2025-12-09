@@ -12,15 +12,14 @@ const JWT_SECRET = "ramkishore_secret_key";
 
 // ----------------- REGISTER API -----------------
 app.post("/register", (req, res) => {
-  const { email, password, fullname } = req.body;
+  const { id, email, password, fullname } = req.body;
 
   db.query(
-    "INSERT INTO registration (email, password, fullname) VALUES (?, ?, ?)",
-    [email, password, fullname],
+    "INSERT INTO registration (id, email, password, fullname) VALUES (?, ?, ?, ?)",
+    [id, email, password, fullname],
     (err, result) => {
-      if (err) {
-        return res.json(err);
-      }
+      if (err) return res.json(err);
+
       res.json({ message: "Inserted successfully" });
     }
   );
