@@ -1,12 +1,17 @@
 const mysql = require("mysql2");
 
-const db = mysql.createConnection({
-  host: "turntable.proxy.rlwy.net",             // from PUBLIC URL
-  user: "root",                                 // from URL
-  password: "jCTuhNAUrmmxSfkEYAOFvsAvCudiIlCA", // your password
-  database: "railway",                          // database name
-  port: 21989                                   // from PUBLIC URL
-});
+const dbConfig = {
+  host: "turntable.proxy.rlwy.net",
+  user: "root",
+  password: "jCTuhNAUrmmxSfkEYAOFvsAvCudiIlCA",
+  database: "railway",
+  port: 21989
+};
+
+// 🔍 DEBUG: print what config is actually used
+console.log("DB CONFIG AT RUNTIME:", dbConfig);
+
+const db = mysql.createConnection(dbConfig);
 
 db.connect((err) => {
   if (err) {
