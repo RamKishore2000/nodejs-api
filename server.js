@@ -15,7 +15,7 @@ app.post("/register", (req, res) => {
   const { id, email, password, fullname } = req.body;
 
   db.query(
-    "INSERT INTO registration (id, email, password, fullname) VALUES (?, ?, ?, ?)",
+    "INSERT INTO registration1 (id, email, password, fullname) VALUES (?, ?, ?, ?)",
     [id, email, password, fullname],
     (err, result) => {
       if (err) return res.json(err);
@@ -30,7 +30,7 @@ app.post("/login", (req, res) => {
   const { email, password } = req.body;
 
   db.query(
-    "SELECT * FROM registration WHERE email = ? AND password = ?",
+    "SELECT * FROM registration1 WHERE email = ? AND password = ?",
     [email, password],
     (err, results) => {
       if (err) return res.json(err);
