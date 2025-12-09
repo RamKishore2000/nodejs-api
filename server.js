@@ -7,9 +7,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Secret key for JWT (keep it safe)
+// Secret key for JWT
 const JWT_SECRET = "ramkishore_secret_key";
 
+// ----------------- REGISTER API -----------------
 app.post("/register", (req, res) => {
   const { email, password, fullname } = req.body;
 
@@ -25,6 +26,7 @@ app.post("/register", (req, res) => {
   );
 });
 
+// ----------------- LOGIN API -----------------
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
 
@@ -37,7 +39,6 @@ app.post("/login", (req, res) => {
       if (results.length > 0) {
         const user = results[0];
 
-        // Create JWT Token (payload = user details)
         const token = jwt.sign(
           {
             id: user.id,
@@ -45,13 +46,13 @@ app.post("/login", (req, res) => {
             email: user.email,
           },
           JWT_SECRET,
-          { expiresIn: "1h" }  
+          { expiresIn: "1h" }
         );
 
         res.json({
           message: "Login successful",
-          user: user,   // full user row
-          token: token  // token included
+          user: user,
+          token: token
         });
       } else {
         res.status(401).json({ message: "Invalid email or password" });
@@ -60,14 +61,18 @@ app.post("/login", (req, res) => {
   );
 });
 
+// ----------------- BASIC ROUTES -----------------
 app.get('/', (req, res) => {
-  res.send("Hello World");
+  res.send("Hello World — Node.js API is Running!");
 });
 
 app.get('/about', (req, res) => {
-  res.send("This is about page");
+  res.send("This is the About page");
 });
 
-app.listen(5000, () => {
-  console.log("Server is running on port 5000");
+// ----------------- IMPORTANT FOR RAILWAY -----------------
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
