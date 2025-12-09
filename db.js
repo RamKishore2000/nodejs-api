@@ -1,23 +1,18 @@
-// db.js
 const mysql = require("mysql2");
 
-// Clever Cloud automatically sets these env variables
-const db = mysql.createPool({
-  host: process.env.MYSQL_ADDON_HOST,
-  user: process.env.MYSQL_ADDON_USER,
-  password: process.env.MYSQL_ADDON_PASSWORD,
-  database: process.env.MYSQL_ADDON_DB,
-  port: process.env.MYSQL_ADDON_PORT,
-  waitForConnections: true,
-  connectionLimit: 10,
+const db = mysql.createConnection({
+  host: "mysql.railway.internal",
+  user: "root",
+  password: "jCTuhNAUrmmxSfkEYAOFvsAvCudiIlCA",
+  database: "railway",
+  port: 3306
 });
 
-db.getConnection((err, connection) => {
+db.connect((err) => {
   if (err) {
-    console.error("❌ Error connecting to database:", err);
+    console.log("❌ Error connecting to database:", err);
   } else {
-    console.log("✅ Database connected successfully");
-    connection.release();
+    console.log("✅ Connected to Railway MySQL");
   }
 });
 

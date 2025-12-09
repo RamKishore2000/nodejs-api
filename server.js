@@ -1,22 +1,15 @@
-// server.js
-const express = require("express");
+const express = require('express');
+const db = require('./db');
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
-const db = require("./db"); // our db.js
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Clever Cloud will give a PORT
-const PORT = process.env.PORT || 5000;
+// Secret key for JWT (keep it safe)
+const JWT_SECRET = "ramkishore_secret_key";
 
-// Secret key for JWT
-const JWT_SECRET = process.env.JWT_SECRET || "ramkishore_secret_key";
-
-// ---------- ROUTES ----------
-
-// Register
 app.post("/register", (req, res) => {
   const { email, password, fullname } = req.body;
 
@@ -25,15 +18,13 @@ app.post("/register", (req, res) => {
     [email, password, fullname],
     (err, result) => {
       if (err) {
-        console.error(err);
-        return res.status(500).json({ message: "DB error", error: err });
+        return res.json(err);
       }
       res.json({ message: "Inserted successfully" });
     }
   );
 });
 
-// Login
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
 
@@ -41,14 +32,12 @@ app.post("/login", (req, res) => {
     "SELECT * FROM registration WHERE email = ? AND password = ?",
     [email, password],
     (err, results) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ message: "DB error", error: err });
-      }
+      if (err) return res.json(err);
 
       if (results.length > 0) {
         const user = results[0];
 
+        // Create JWT Token (payload = user details)
         const token = jwt.sign(
           {
             id: user.id,
@@ -56,13 +45,13 @@ app.post("/login", (req, res) => {
             email: user.email,
           },
           JWT_SECRET,
-          { expiresIn: "1h" }
+          { expiresIn: "1h" }  
         );
 
         res.json({
           message: "Login successful",
-          user,
-          token,
+          user: user,   // full user row
+          token: token  // token included
         });
       } else {
         res.status(401).json({ message: "Invalid email or password" });
@@ -71,16 +60,14 @@ app.post("/login", (req, res) => {
   );
 });
 
-// Simple test routes
-app.get("/", (req, res) => {
-  res.send("Hello World from Clever Cloud");
+app.get('/', (req, res) => {
+  res.send("Hello World");
 });
 
-app.get("/about", (req, res) => {
+app.get('/about', (req, res) => {
   res.send("This is about page");
 });
 
-// ---------- START SERVER ----------
-app.listen(PORT, "0.0.0.0", () => {
-  console.log("🚀 Server is running on port", PORT);
+app.listen(5000, () => {
+  console.log("Server is running on port 5000");
 });
